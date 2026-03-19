@@ -1,5 +1,4 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import OnlineStatus from "./OnlineStatus";
 
 const tabs = [
     {
@@ -96,83 +95,69 @@ export default function BottomNav() {
                 transform: "translateX(-50%)",
                 width: "100%",
                 maxWidth: 480,
+                height: "var(--nav-h)",
                 background: "var(--white)",
                 borderTop: "1px solid var(--border)",
+                display: "flex",
                 zIndex: 100,
             }}>
-            {/* Online / Offline status strip */}
-            <div
-                style={{
-                    padding: "6px 16px",
-                    borderBottom: "1px solid var(--border)",
-                    display: "flex",
-                    alignItems: "center",
-                }}>
-                <OnlineStatus />
-            </div>
-
-            {/* Tab row */}
-            <div style={{ display: "flex", height: 56 }}>
-                {tabs.map((tab) => {
-                    const active = pathname === tab.path;
-                    return (
-                        <button
-                            key={tab.path}
-                            onClick={() => navigate(tab.path)}
+            {tabs.map((tab) => {
+                const active = pathname === tab.path;
+                return (
+                    <button
+                        key={tab.path}
+                        onClick={() => navigate(tab.path)}
+                        style={{
+                            flex: 1,
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: 4,
+                            paddingTop: 8,
+                            background: "none",
+                            border: "none",
+                            cursor: "pointer",
+                            WebkitTapHighlightColor: "transparent",
+                        }}>
+                        <span
                             style={{
-                                flex: 1,
+                                width: 26,
+                                height: 26,
                                 display: "flex",
-                                flexDirection: "column",
                                 alignItems: "center",
                                 justifyContent: "center",
-                                gap: 4,
-                                paddingTop: 8,
-                                background: "none",
-                                border: "none",
-                                cursor: "pointer",
-                                WebkitTapHighlightColor: "transparent",
+                                borderRadius: 8,
+                                background: active
+                                    ? "var(--red-light)"
+                                    : "transparent",
+                                transition: "background 0.2s",
                             }}>
                             <span
                                 style={{
-                                    width: 26,
-                                    height: 26,
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    borderRadius: 8,
-                                    background: active
-                                        ? "var(--red-light)"
-                                        : "transparent",
-                                    transition: "background 0.2s",
-                                }}>
-                                <span
-                                    style={{
-                                        width: 18,
-                                        height: 18,
-                                        display: "block",
-                                        stroke: active
-                                            ? "var(--red)"
-                                            : "var(--ink-3)",
-                                    }}>
-                                    {tab.icon}
-                                </span>
-                            </span>
-                            <span
-                                style={{
-                                    fontSize: 10,
-                                    fontWeight: 500,
-                                    color: active
+                                    width: 18,
+                                    height: 18,
+                                    display: "block",
+                                    stroke: active
                                         ? "var(--red)"
-                                        : "var(--ink-4)",
-                                    letterSpacing: "0.02em",
-                                    fontFamily: "var(--font-body)",
+                                        : "var(--ink-3)",
                                 }}>
-                                {tab.label}
+                                {tab.icon}
                             </span>
-                        </button>
-                    );
-                })}
-            </div>
+                        </span>
+                        <span
+                            style={{
+                                fontSize: 10,
+                                fontWeight: 500,
+                                color: active ? "var(--red)" : "var(--ink-4)",
+                                letterSpacing: "0.02em",
+                                fontFamily: "var(--font-body)",
+                            }}>
+                            {tab.label}
+                        </span>
+                    </button>
+                );
+            })}
         </nav>
     );
 }
