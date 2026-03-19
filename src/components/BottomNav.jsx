@@ -1,4 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
+import OnlineStatus from "./OnlineStatus";
 
 const tabs = [
     {
@@ -95,70 +96,83 @@ export default function BottomNav() {
                 transform: "translateX(-50%)",
                 width: "100%",
                 maxWidth: 480,
-                height: "var(--nav-h)",
                 background: "var(--white)",
                 borderTop: "1px solid var(--border)",
-                display: "flex",
-                paddingBottom: 8,
                 zIndex: 100,
             }}>
-            {tabs.map((tab) => {
-                const active = pathname === tab.path;
-                return (
-                    <button
-                        key={tab.path}
-                        onClick={() => navigate(tab.path)}
-                        style={{
-                            flex: 1,
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            gap: 4,
-                            paddingTop: 8,
-                            background: "none",
-                            border: "none",
-                            cursor: "pointer",
-                            WebkitTapHighlightColor: "transparent",
-                        }}>
-                        <span
+            {/* Online / Offline status strip */}
+            <div
+                style={{
+                    padding: "6px 16px",
+                    borderBottom: "1px solid var(--border)",
+                    display: "flex",
+                    alignItems: "center",
+                }}>
+                <OnlineStatus />
+            </div>
+
+            {/* Tab row */}
+            <div style={{ display: "flex", height: 56 }}>
+                {tabs.map((tab) => {
+                    const active = pathname === tab.path;
+                    return (
+                        <button
+                            key={tab.path}
+                            onClick={() => navigate(tab.path)}
                             style={{
-                                width: 26,
-                                height: 26,
+                                flex: 1,
                                 display: "flex",
+                                flexDirection: "column",
                                 alignItems: "center",
                                 justifyContent: "center",
-                                borderRadius: 8,
-                                background: active
-                                    ? "var(--red-light)"
-                                    : "transparent",
-                                transition: "background 0.2s",
+                                gap: 4,
+                                paddingTop: 8,
+                                background: "none",
+                                border: "none",
+                                cursor: "pointer",
+                                WebkitTapHighlightColor: "transparent",
                             }}>
                             <span
                                 style={{
-                                    width: 18,
-                                    height: 18,
-                                    display: "block",
-                                    stroke: active
-                                        ? "var(--red)"
-                                        : "var(--ink-3)",
+                                    width: 26,
+                                    height: 26,
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    borderRadius: 8,
+                                    background: active
+                                        ? "var(--red-light)"
+                                        : "transparent",
+                                    transition: "background 0.2s",
                                 }}>
-                                {tab.icon}
+                                <span
+                                    style={{
+                                        width: 18,
+                                        height: 18,
+                                        display: "block",
+                                        stroke: active
+                                            ? "var(--red)"
+                                            : "var(--ink-3)",
+                                    }}>
+                                    {tab.icon}
+                                </span>
                             </span>
-                        </span>
-                        <span
-                            style={{
-                                fontSize: 10,
-                                fontWeight: 500,
-                                color: active ? "var(--red)" : "var(--ink-4)",
-                                letterSpacing: "0.02em",
-                                fontFamily: "var(--font-body)",
-                            }}>
-                            {tab.label}
-                        </span>
-                    </button>
-                );
-            })}
+                            <span
+                                style={{
+                                    fontSize: 10,
+                                    fontWeight: 500,
+                                    color: active
+                                        ? "var(--red)"
+                                        : "var(--ink-4)",
+                                    letterSpacing: "0.02em",
+                                    fontFamily: "var(--font-body)",
+                                }}>
+                                {tab.label}
+                            </span>
+                        </button>
+                    );
+                })}
+            </div>
         </nav>
     );
 }

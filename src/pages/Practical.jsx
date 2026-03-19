@@ -1,4 +1,6 @@
 import ScreenHeader from "../components/ScreenHeader";
+import WeatherCard from "../components/WeatherCard";
+import CurrencyConverter from "../components/CurrencyConverter";
 import emergency from "../data/emergency.json";
 
 const phrases = [
@@ -123,71 +125,10 @@ export default function Practical() {
                 title='Practical info'
                 subtitle='Everything you need to know'
             />
-
             <div style={{ padding: "20px 20px 0" }}>
-                {/* Weather card */}
-                <div
-                    style={{
-                        background:
-                            "linear-gradient(135deg, var(--red), #A0102A)",
-                        borderRadius: "var(--r-md)",
-                        padding: 18,
-                        marginBottom: 20,
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                    }}>
-                    <div>
-                        <p
-                            style={{
-                                fontSize: 13,
-                                color: "rgba(255,255,255,0.7)",
-                                fontWeight: 400,
-                                marginBottom: 2,
-                            }}>
-                            Valletta, Malta
-                        </p>
-                        <p
-                            style={{
-                                fontFamily: "var(--font-display)",
-                                fontSize: 52,
-                                fontWeight: 400,
-                                color: "white",
-                                lineHeight: 1,
-                            }}>
-                            28°
-                        </p>
-                        <p
-                            style={{
-                                fontSize: 13,
-                                color: "rgba(255,255,255,0.8)",
-                                fontWeight: 300,
-                                marginTop: 4,
-                            }}>
-                            Sunny · Light breeze
-                        </p>
-                    </div>
-                    <svg
-                        width='52'
-                        height='52'
-                        viewBox='0 0 48 48'
-                        fill='none'
-                        stroke='rgba(255,255,255,0.65)'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'>
-                        <circle cx='24' cy='24' r='10' />
-                        <line x1='24' y1='4' x2='24' y2='10' />
-                        <line x1='24' y1='38' x2='24' y2='44' />
-                        <line x1='4' y1='24' x2='10' y2='24' />
-                        <line x1='38' y1='24' x2='44' y2='24' />
-                        <line x1='8.7' y1='8.7' x2='13' y2='13' />
-                        <line x1='35' y1='35' x2='39.3' y2='39.3' />
-                        <line x1='39.3' y1='8.7' x2='35' y2='13' />
-                        <line x1='13' y1='35' x2='8.7' y2='39.3' />
-                    </svg>
-                </div>
+                <SectionTitle>Weather</SectionTitle>
+                <WeatherCard />
 
-                {/* Emergency numbers */}
                 <SectionTitle>Emergency numbers</SectionTitle>
                 {emergency.map((item) => (
                     <div
@@ -255,8 +196,10 @@ export default function Practical() {
                     </div>
                 ))}
 
-                {/* Money */}
-                <SectionTitle>Money & currency</SectionTitle>
+                <SectionTitle>Currency converter</SectionTitle>
+                <CurrencyConverter />
+
+                <SectionTitle>Money & ATMs</SectionTitle>
                 <InfoCard title='Currency: Euro (€)'>
                     <p
                         style={{
@@ -265,14 +208,13 @@ export default function Practical() {
                             lineHeight: 1.6,
                             fontWeight: 300,
                         }}>
-                        Malta uses the Euro. ATMs are widely available in
-                        Valletta, Sliema and St Julian's. Most restaurants and
-                        shops accept Visa/Mastercard. Tip 10% in restaurants if
-                        not included.
+                        ATMs are widely available in Valletta, Sliema and St
+                        Julian's. Most restaurants and shops accept
+                        Visa/Mastercard. Tip 10% in restaurants if not already
+                        included.
                     </p>
                 </InfoCard>
 
-                {/* SIM */}
                 <SectionTitle>SIM & internet</SectionTitle>
                 <InfoCard title='Stay connected'>
                     <p
@@ -289,7 +231,6 @@ export default function Practical() {
                     </p>
                 </InfoCard>
 
-                {/* Phrases */}
                 <SectionTitle>Useful Maltese phrases</SectionTitle>
                 <InfoCard>
                     <table
