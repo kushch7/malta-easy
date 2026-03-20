@@ -21,6 +21,18 @@ function saveToStorage(title, data) {
     } catch {}
 }
 
+/**
+ * Wikipedia thumbnail URLs follow this pattern:
+ *   https://upload.wikimedia.org/wikipedia/.../NNNpx-Filename.ext
+ * We swap the NNN for 1200 to get a high-resolution version.
+ * If the URL doesn't match (rare), we fall back to the original.
+ */
+function upscaleWikipediaImage(url) {
+    if (!url) return null;
+    // Match the pixel-width segment e.g. /320px- or /640px-
+    return url.replace(/\/\d+px-/, "/1200px-");
+}
+
 export function useWikipedia(title) {
     const [data, setData] = useState(
         () => memCache[title] || loadFromStorage(title),
@@ -48,7 +60,9 @@ export function useWikipedia(title) {
             .then((json) => {
                 const result = {
                     extract: json.extract || "",
-                    imageUrl: json.thumbnail?.source || null,
+                    imageUrl: upscaleWikipediaImage(
+                        json.thumbnail?.source || null,
+                    ),
                     pageUrl: json.content_urls?.mobile?.page || null,
                 };
                 memCache[title] = result;

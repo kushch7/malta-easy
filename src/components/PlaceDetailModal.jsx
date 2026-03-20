@@ -12,6 +12,7 @@ const catColors = {
 export default function PlaceDetailModal({ place, onClose }) {
     const isOpen = Boolean(place);
     const { data, loading } = useWikipedia(place?.wikipediaTitle);
+    const accentColor = catColors[place?.category] || catColors.default;
 
     // Block body scroll while open
     useEffect(() => {
@@ -30,13 +31,12 @@ export default function PlaceDetailModal({ place, onClose }) {
         return () => window.removeEventListener("keydown", handler);
     }, [onClose]);
 
-    const accentColor = catColors[place?.category] || catColors.default;
-
     return (
         <>
             {/* Backdrop */}
             <div
                 onClick={onClose}
+                aria-hidden='true'
                 style={{
                     position: "fixed",
                     inset: 0,
@@ -48,7 +48,7 @@ export default function PlaceDetailModal({ place, onClose }) {
                 }}
             />
 
-            {/* Sheet */}
+            {/* Bottom sheet */}
             <div
                 role='dialog'
                 aria-modal='true'
@@ -59,14 +59,20 @@ export default function PlaceDetailModal({ place, onClose }) {
                     left: "50%",
                     transform: isOpen
                         ? "translateX(-50%) translateY(0)"
-                        : "translateX(-50%) translateY(100%)",
+                        : "translateX(-50%) translateY(105%)",
                     width: "100%",
                     maxWidth: 480,
                     background: "var(--white)",
                     borderRadius: "22px 22px 0 0",
                     zIndex: 600,
                     transition: "transform 0.35s cubic-bezier(0.32,0.72,0,1)",
-                    maxHeight: "85dvh",
+                    /*
+                     * maxHeight must leave room for the bottom nav bar.
+                     * We subtract var(--nav-h) so the sheet never slides under it.
+                     * On iOS with a home indicator we also respect safe-area-inset-bottom
+                     * via the env() fallback.
+                     */
+                    maxHeight: "calc(88dvh - var(--nav-h))",
                     display: "flex",
                     flexDirection: "column",
                     overflow: "hidden",
@@ -86,7 +92,7 @@ export default function PlaceDetailModal({ place, onClose }) {
                 {/* Image */}
                 <div
                     style={{
-                        height: 200,
+                        height: 210,
                         flexShrink: 0,
                         position: "relative",
                         overflow: "hidden",
@@ -110,6 +116,18 @@ export default function PlaceDetailModal({ place, onClose }) {
                             }}
                         />
                     )}
+
+                    {/* Gradient scrim so close button is always visible */}
+                    <div
+                        style={{
+                            position: "absolute",
+                            inset: 0,
+                            background:
+                                "linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, transparent 40%)",
+                            pointerEvents: "none",
+                        }}
+                    />
+
                     {!data?.imageUrl && (
                         <span
                             style={{
@@ -137,7 +155,7 @@ export default function PlaceDetailModal({ place, onClose }) {
                             width: 32,
                             height: 32,
                             borderRadius: "50%",
-                            background: "rgba(0,0,0,0.35)",
+                            background: "rgba(0,0,0,0.38)",
                             border: "none",
                             cursor: "pointer",
                             display: "flex",
@@ -158,14 +176,22 @@ export default function PlaceDetailModal({ place, onClose }) {
                     </button>
                 </div>
 
-                {/* Scrollable content */}
+                {/*
+                 * Scrollable content.
+                 * padding-bottom = nav bar height + 24px breathing room
+                 * + env(safe-area-inset-bottom) for iPhone home indicator.
+                 * This ensures the Wikipedia link is always reachable above the nav.
+                 */}
                 <div
                     style={{
                         overflowY: "auto",
                         flex: 1,
-                        padding: "16px 20px 32px",
+                        WebkitOverflowScrolling: "touch",
+                        padding: "16px 20px",
+                        paddingBottom:
+                            "calc(var(--nav-h) + 24px + env(safe-area-inset-bottom, 0px))",
                     }}>
-                    {/* Name + tags */}
+                    {/* Name */}
                     <h2
                         style={{
                             fontFamily: "var(--font-display)",
@@ -177,6 +203,7 @@ export default function PlaceDetailModal({ place, onClose }) {
                         {place?.name}
                     </h2>
 
+                    {/* Tags */}
                     <div
                         style={{
                             display: "flex",
@@ -198,17 +225,14 @@ export default function PlaceDetailModal({ place, onClose }) {
                                             : "var(--stone)",
                                     color:
                                         i === 0 ? accentColor : "var(--ink-2)",
-                                    border:
-                                        i === 0
-                                            ? `1px solid ${accentColor}40`
-                                            : "1px solid var(--border)",
+                                    border: `1px solid ${i === 0 ? `${accentColor}40` : "var(--border)"}`,
                                 }}>
                                 {tag}
                             </span>
                         ))}
                     </div>
 
-                    {/* Description from Wikipedia */}
+                    {/* Description — shimmer skeleton while loading */}
                     {loading && (
                         <div
                             style={{
@@ -216,7 +240,7 @@ export default function PlaceDetailModal({ place, onClose }) {
                                 flexDirection: "column",
                                 gap: 8,
                             }}>
-                            {[90, 75, 60].map((w) => (
+                            {[92, 78, 64].map((w) => (
                                 <div
                                     key={w}
                                     style={{
@@ -228,7 +252,7 @@ export default function PlaceDetailModal({ place, onClose }) {
                                     }}
                                 />
                             ))}
-                            <style>{`@keyframes shimmer { 0%,100%{opacity:.6} 50%{opacity:1} }`}</style>
+                            <style>{`@keyframes shimmer{0%,100%{opacity:.6}50%{opacity:1}}`}</style>
                         </div>
                     )}
 
@@ -244,18 +268,18 @@ export default function PlaceDetailModal({ place, onClose }) {
                         </p>
                     )}
 
-                    {!data?.extract && !loading && (
+                    {!data?.extract && !loading && place?.description && (
                         <p
                             style={{
                                 fontSize: 14,
                                 color: "var(--ink-4)",
                                 fontStyle: "italic",
                             }}>
-                            {place?.description}
+                            {place.description}
                         </p>
                     )}
 
-                    {/* Wikipedia link */}
+                    {/* Wikipedia link — always visible above the nav bar thanks to padding */}
                     {data?.pageUrl && (
                         <a
                             href={data.pageUrl}
@@ -265,19 +289,21 @@ export default function PlaceDetailModal({ place, onClose }) {
                                 display: "inline-flex",
                                 alignItems: "center",
                                 gap: 6,
-                                marginTop: 16,
+                                marginTop: 18,
                                 fontSize: 13,
-                                color: "var(--red)",
+                                color: accentColor,
                                 fontWeight: 500,
                                 textDecoration: "none",
+                                minHeight: 44 /* accessible tap target */,
+                                padding: "10px 0",
                             }}>
                             Read more on Wikipedia
                             <svg
-                                width='12'
-                                height='12'
+                                width='13'
+                                height='13'
                                 viewBox='0 0 24 24'
                                 fill='none'
-                                stroke='var(--red)'
+                                stroke={accentColor}
                                 strokeWidth='2'>
                                 <path d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6' />
                                 <polyline points='15 3 21 3 21 9' />
