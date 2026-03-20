@@ -270,6 +270,12 @@ export default function Practical() {
                         </tbody>
                     </table>
                 </InfoCard>
+                <div style={{ color: "gray", fontSize: "14px" }}>
+                    <p>
+                        Designed and Developed by Andrii Kushch and Natália
+                        Pakesová
+                    </p>
+                </div>
 
                 <div style={{ height: 16 }} />
             </div>
