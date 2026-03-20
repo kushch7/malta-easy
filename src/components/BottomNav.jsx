@@ -99,7 +99,6 @@ export default function BottomNav() {
                 background: "var(--white)",
                 borderTop: "1px solid var(--border)",
                 display: "flex",
-                paddingBottom: 8,
                 zIndex: 100,
             }}>
             {tabs.map((tab) => {
