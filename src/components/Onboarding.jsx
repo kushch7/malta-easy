@@ -24,7 +24,7 @@ const steps = [
             </svg>
         ),
         title: "Works without internet",
-        desc: "All transport, maps, and emergency info are saved on your device. No signal needed.",
+        desc: "Transport, maps, and emergency info are saved on your device. No signal needed.",
     },
     {
         icon: (
@@ -42,7 +42,7 @@ const steps = [
             </svg>
         ),
         title: "No login required",
-        desc: "Open the app and go. No account, no password, no waiting.",
+        desc: "No account, no password, no waiting.",
     },
     {
         icon: (
@@ -92,7 +92,7 @@ export default function OnboardingScreen() {
         <div
             role='dialog'
             aria-modal='true'
-            aria-label='Welcome to Malta Guide'
+            aria-label='Welcome to Malta!'
             style={{
                 position: "fixed",
                 inset: 0,
@@ -170,7 +170,7 @@ export default function OnboardingScreen() {
                         fontFamily: "var(--font-body)",
                         position: "relative",
                     }}>
-                    Educational courses · Malta
+                    Headstart Technology · Malta
                 </p>
                 <h1
                     style={{
